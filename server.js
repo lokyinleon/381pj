@@ -42,6 +42,7 @@ app.post("/login_auth", function(req, res) {
                         //have this user, check password
                         if (result.password == password) {
                             console.log("Login sucess");
+                            //Todo: add cookie
                             res.redirect('/read')
                         } else {
                             console.log("Password not match");
