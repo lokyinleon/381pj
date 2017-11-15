@@ -22,7 +22,7 @@ app.get("/", function(req, res) {
 });
 
 app.post("/login_auth", function(req, res) {
-  res.status(200);
+    res.status(200);
 
     //query the database to check password
     //if ok: cookie, redirect to /read
@@ -48,11 +48,11 @@ app.post("/login_auth", function(req, res) {
                             //Todo: add cookie
 
                             if (req.cookies.userid) {
-                            console.log(req.cookies);
-                            res.write("Welcome back");
+                                console.log(req.cookies);
+                                res.write("Welcome back");
                             } else {
-                             res.cookie('userid', userid, {maxAge: 60 * 1000});
-                             res.write("Welcome");
+                                res.cookie('userid', userid, { maxAge: 60 * 1000 });
+                                res.write("Welcome");
                             }
 
                             //res.redirect('/read');
@@ -86,6 +86,7 @@ app.get("/register", function(req, res) {
 });
 
 app.post("/reg_auth", function(req, res) {
+    res.status(200);
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
         var register_userid = fields.registerName;
