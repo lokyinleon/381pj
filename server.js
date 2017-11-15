@@ -8,6 +8,9 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var mongourl = 'mongodb://hoiki:password@ds141514.mlab.com:41514/hoikitest';
 
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 app.set('view engine', 'ejs');
 
 app.get("/", function(req, res) {
@@ -19,7 +22,7 @@ app.get("/", function(req, res) {
 });
 
 app.post("/login_auth", function(req, res) {
-
+  res.status(200);
 
     //query the database to check password
     //if ok: cookie, redirect to /read
@@ -43,12 +46,22 @@ app.post("/login_auth", function(req, res) {
                         if (result.password == password) {
                             console.log("Login sucess");
                             //Todo: add cookie
-                            res.redirect('/read')
+
+                            if (req.cookies.userid) {
+                            console.log(req.cookies);
+                            res.write("Welcome back");
+                            } else {
+                             res.cookie('userid', userid, {maxAge: 60 * 1000});
+                             res.write("Welcome");
+                            }
+
+                            //res.redirect('/read');
                         } else {
                             console.log("Password not match");
                             var msg = "Password not match";
                             res.redirect('/?message=' + msg);
                         }
+
                     } else {
                         //dont have this user (userid/password error)
                         console.log("No this user");
