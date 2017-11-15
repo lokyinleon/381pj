@@ -7,9 +7,10 @@
 
 		<%= errorMessage %>
 
-		<form action='/auth' method='POST'>
+		<form action='/reg_auth' method='POST'>
 			<input type='text' name='registerName' label='Name'>
-			<input type='text' name='registerPassword' label='Password'> 
+			<input type='text' name='registerPassword' label='Password'>
+			<input type="hidden" name="register" value="register"> 
 			<input type='submit' value='Register'> 
 		</form>
 

@@ -18,6 +18,15 @@ app.get("/", function(req, res) {
     res.render("login", {message: msg});
 });
 
+app.post("/login_auth", function(req, res){
+	var userid = req.query.name;
+	var password = req.query.password;
+
+	//query the database to check password
+	//if ok: cookie, redirect to /read
+	//if not ok: redirect to / with error message
+});
+
 app.get("/register", function(req, res) {
     res.status(200);
     var err = req.query.errorMessage;
@@ -27,14 +36,7 @@ app.get("/register", function(req, res) {
     //res.render("register", {errorMessage: '1'})
 });
 
-app.post("/auth", function(req, res) {
-	var userid = req.query.name;
-	var password = req.query.password;
-
-	//query the database to check password
-	//if ok: cookie, redirect to /read
-	//if not ok: redirect to / with error message
-
+app.post("/reg_auth", function(req, res) {
 	var form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files) {
 	    var register_userid = fields.registerName;
@@ -77,9 +79,6 @@ app.post("/auth", function(req, res) {
 		                res.redirect('/?message='+message);
 	});
 	                }
-	                //if ok: redirect to /
-					//if not ok: redirect to /register with error message
-
 	            });
 	        });
 
