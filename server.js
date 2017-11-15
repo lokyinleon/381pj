@@ -23,7 +23,7 @@ app.get("/auth", function(req,res) {
 
 	var register_userid = req.query.registerName;
 	var register_password =  req.query.registerPassword;
-
+    console.log("ID:"+register_userid+"Password:"+register_password);
 
 
 	//2 fields must be filled
