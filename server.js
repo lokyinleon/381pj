@@ -5,12 +5,12 @@ app.set('view engine', 'ejs');
 
 app.get("/", function(req,res) {
 	res.status(200);
-	res.render("sign_in");	
+	res.render("login");	
 });
 
 app.get("/register",function(req,res){
 	res.status(200);
-	res.render("sign_up")
+	res.render("register")
 });
 
 app.get("/auth", function(req,res) {
@@ -24,7 +24,7 @@ app.get("/auth", function(req,res) {
 	var register_userid = req.query.registerName;
 	var register_password =  req.query.registerPassword;
 
-	
+
 
 	//2 fields must be filled
 	//user id must be unique
