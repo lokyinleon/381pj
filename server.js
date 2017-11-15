@@ -12,7 +12,10 @@ app.set('view engine', 'ejs');
 
 app.get("/", function(req, res) {
     res.status(200);
-    res.render("login");
+    var msg = req.query.message;
+    if (!msg)
+        msg = "";
+    res.render("login", {message: msg});
 });
 
 app.get("/register", function(req, res) {
@@ -47,9 +50,10 @@ app.post("/auth", function(req, res) {
 	        //database operation
 	        // if userid == unique, insert userid and password to mongodb
 	        // if database return OK! -> redirect /read
-	        MongoClient.connect(monogourl, function(err, db) {
+	        MongoClient.connect(mongourl, function(err, db) {
 	            assert.equal(err, null);
 	            db.collection('users').findOne({ user_id: register_userid }, function(err, result) {
+	                 assert.equal(err, null);
 	                if (result) {
 	                    //This user id found in database
 	                    //user id not unique, not insert
@@ -59,6 +63,19 @@ app.post("/auth", function(req, res) {
 	                    //userid is unique
 	                    //do insert 
 	                    console.log("insert");
+	                    db.collection('users').insertOne({user_id:register_userid,password:register_password},function(err,result) {
+		                assert.equal(err,null);
+		                console.log("Insert was successful!");
+		                console.log(JSON.stringify(result[0]));
+		                var message = "";
+		                if(err){
+                        	message = "Account creation error";
+		                } else{
+		                	message = "Your account have been created";
+		                }
+		                console.log(message);
+		                res.redirect('/?message='+message);
+	});
 	                }
 	                //if ok: redirect to /
 					//if not ok: redirect to /register with error message
