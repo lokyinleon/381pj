@@ -4,6 +4,9 @@
 	</head>
 	<body>
 		<h1>Register</h1>
+
+		<%= errorMessage %>
+
 		<form action='/auth' method='POST'>
 			<input type='text' name='registerName' label='Name'>
 			<input type='text' name='registerPassword' label='Password'> 
