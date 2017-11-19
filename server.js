@@ -8,6 +8,15 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var mongourl = 'mongodb://hoiki:password@ds141514.mlab.com:41514/hoikitest';
 
+//Alternative way to use cookies:
+// var session = require('cookie-session');
+// app.use(session({
+//     name: 'session',
+//     keys: ['key1', 'key2']
+// }));
+// req.session.userid
+// req.session = null;
+
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
@@ -18,7 +27,15 @@ app.get("/", function(req, res) {
     var msg = req.query.message;
     if (!msg)
         msg = "";
-    res.render("login", { message: msg });
+    //if cookie has userid -> logined -> redirect to /read
+    //else not login -> show login page
+    //typeof query !== 'undefined' && query !== null
+
+    if (req.cookies.userid) {
+        res.redirect('/read');
+    } else {
+        res.render("login", { message: msg });
+    }
 });
 
 app.post("/login_auth", function(req, res) {
@@ -45,17 +62,18 @@ app.post("/login_auth", function(req, res) {
                         //have this user, check password
                         if (result.password == password) {
                             console.log("Login sucess");
-                            //Todo: add cookie
-
+                            //Retrieve the cookie
                             if (req.cookies.userid) {
                                 console.log(req.cookies);
-                                res.write("Welcome back");
+                                // res.write("Welcome back");
                             } else {
-                                res.cookie('userid', userid, { maxAge: 60 * 1000 });
-                                res.write("Welcome");
+                                //set cookie:
+                                //res.cookie("key", value);
+                                res.cookie('userid', userid, { maxAge: 1.5 * 60 * 1000 });
+                                // res.write("Welcome");
                             }
-
-                            //res.redirect('/read');
+                            //Error in this line:
+                            res.redirect('/read');
                         } else {
                             console.log("Password not match");
                             var msg = "Password not match";
@@ -81,8 +99,13 @@ app.get("/register", function(req, res) {
     var err = req.query.errorMessage;
     if (!req.query.errorMessage)
         err = "";
-    res.render("register", { errorMessage: err });
-    //res.render("register", {errorMessage: '1'})
+    //if cookie has userid -> logined -> redirect to /read
+    //else not login -> show register page
+    if (req.cookies.userid) {
+        res.redirect('/read');
+    } else {
+        res.render("register", { errorMessage: err });
+    }
 });
 
 app.post("/reg_auth", function(req, res) {
@@ -139,8 +162,15 @@ app.post("/reg_auth", function(req, res) {
 
 app.get("/read", function(req, res) {
     res.status(200);
-    res.end("read");
+    res.end("You have login your account!!!");
     //res.render("read", {});
+});
+
+app.get("/logout", function(req, res, next) {
+    //Cannot destroy the cookie...
+    // req.cookies = null;
+    res.clearCookie("userid");
+    res.end("You have logout your account!!!")
 });
 
 app.listen(process.env.PORT || 8099);

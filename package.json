@@ -10,7 +10,8 @@
     "formidable": "^1.1.1",
     "http": "0.0.0",
     "mongodb": "^2.2.33",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "ejs": "*"
   },
   "engine": "node >= 0.10.0",
   "scripts": {
