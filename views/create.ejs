@@ -8,22 +8,23 @@
 		<form action='/create-logic' method='POST' encType='multipart/form-data'>
 			<!-- some fields will not show in the form, they generate by program -->
 			<!-- Restaurant id: <input type='text' name='restaurant_id'><br> -->
-			name: <input type='text' name='name' required><br>
-			borough: <input type='text' name='borough'> <br>
-			cuisine: <input type='text' name='cuisine'><br>
-			photo: <input type='file' name='photo'><br>
-			<!-- photo mimitype: <input type='text' name=''><br> -->
-			address.street: <input type='text' name='address.street'><br>
-			address.building: <input type='text' name='address.building'><br>
-			address.zipcode: <input type='text' name='address.zipcode'><br>
+			Name: <input type='text' name='name' required><br>
+			Borough: <input type='text' name='borough'> <br>
+			Cuisine: <input type='text' name='cuisine'><br>
 			
-			address.coord(lon.): <input type='text' name='address.coord.lon'><br>
-			address.coord(lat.): <input type='text' name='address.coord.lat'><br>
+			<!-- photo mimitype: <input type='text' name=''><br> -->
+			Street: <input type='text' name='street'><br>
+			Building: <input type='text' name='building'><br>
+			Zipcode: <input type='text' name='zipcode'><br>
+			
+			GPS Coordinates (lon.): <input type='text' name='lon'><br>
+			GPS Coordinates (lat.): <input type='text' name='lat'><br>
+			Photo: <input type='file' name='photo'><br>
 
 			<!-- Not rate in here -->
 			<!-- grades.user: <input type='text' name=''><br> -->
 			<!-- grades.score: <input type='text' name=''><br> -->
-			
+
 		<!-- 	owner: <input type='text' name=''><br> -->
 
 			<input type='submit' value='Create Restaurant!'> 

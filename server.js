@@ -185,8 +185,30 @@ app.post("/create-logic", function(req, res) {
         mimetype = req.files.photo.mimetype;
     }
 
-    console.log("mimetype = " + mimetype);
-    res.end("mimetype: " + mimetype);
+    //create a json object to insert in mongoDB
+    //Todo: auto increment on restaurant_id
+    //handle if dont input corresponding data
+    var new_r = {
+        restaurant_id : 1,
+        name : req.body.name,
+        borough : req.body.borough,
+        cuisine : req.body.cuisine,
+        photo : new Buffer(photoBuffer).toString('base64'),
+        photo_mimetype: mimetype,
+        address : {
+            street : req.body.street,
+            building : req.body.building,
+            zipcode : req.body.zipcode,
+            coord : [req.body.lat, req.body.lon]
+        },
+        owner : req.session.userid
+
+    };
+
+    //Todo: Insert to db when the new_r is ready
+
+    console.log("new_r = " + new_r);
+    res.end(JSON.stringify(new_r));
 })
 
 app.get("/logout", function(req, res, next) {
