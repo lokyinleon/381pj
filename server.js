@@ -206,6 +206,14 @@ app.post("/create-logic", function(req, res) {
     };
 
     //Todo: Insert to db when the new_r is ready
+    MongoClient.connect(mongourl, function(err, db) {
+      assert.equal(err,null);
+      db.insertOne(db, new_r, function(result) {
+          db.close();
+          res.status(200);
+          res.end('restaurant was inserted into MongoDB!');
+      })
+    });
 
     console.log("new_r = " + new_r);
     res.end(JSON.stringify(new_r));
