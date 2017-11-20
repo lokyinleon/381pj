@@ -11,7 +11,8 @@
     "mongodb": "^2.2.33",
     "url": "^0.11.0",
     "ejs": "*",
-    "cookie-session": "latest"
+    "cookie-session": "latest",
+    "express-fileupload": "latest"
   },
   "engine": "node >= 0.10.0",
   "scripts": {

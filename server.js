@@ -7,6 +7,7 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var mongourl = 'mongodb://hoiki:password@ds141514.mlab.com:41514/hoikitest';
+var fileUpload = require('express-fileupload');
 
 //Alternative way to use cookies:
 var session = require('cookie-session');
@@ -16,6 +17,8 @@ app.use(session({
 }));
 // req.session.userid
 // req.session = null;
+
+app.use(fileUpload());
 
 app.set('view engine', 'ejs');
 
@@ -157,6 +160,34 @@ app.get("/read", function(req, res) {
     res.end("You have login your account!!!");
     //res.render("read", {});
 });
+
+app.get("/new", function(req, res) {
+    res.status(200);
+    //have login -> create page
+    //not login -> show login page
+    if (req.session.userid) {
+        res.render("create");
+    } else {
+        res.render('login', { message: "" });
+    }
+
+});
+
+app.post("/create-logic", function(req, res) {
+    res.status(200);
+    //input text field in form
+    console.log(req.body);
+    //uploaded photo data 
+    var photoBuffer = "";
+    var mimetype = "";
+    if (req.files.photo) {
+        photoBuffer = req.files.photo.data;
+        mimetype = req.files.photo.mimetype;
+    }
+
+    console.log("mimetype = " + mimetype);
+    res.end("mimetype: " + mimetype);
+})
 
 app.get("/logout", function(req, res, next) {
     req.session = null;
