@@ -173,6 +173,18 @@ app.get("/new", function(req, res) {
 
 });
 
+
+function getNextID() {
+    MongoClient.connect(mongourl, function(err, db) {
+        db.collection('restaurants').count({}, function(err, count) {
+            return count + 1;
+        });
+    });
+
+}
+
+
+
 app.post("/create-logic", function(req, res) {
     res.status(200);
     //input text field in form
@@ -188,41 +200,68 @@ app.post("/create-logic", function(req, res) {
     //create a json object to insert in mongoDB
     //Todo: auto increment on restaurant_id
     //handle if dont input corresponding data
-    var new_r = {
-        restaurant_id : 1,
-        name : req.body.name,
-        borough : req.body.borough,
-        cuisine : req.body.cuisine,
-        photo : new Buffer(photoBuffer).toString('base64'),
-        photo_mimetype: mimetype,
-        address : {
-            street : req.body.street,
-            building : req.body.building,
-            zipcode : req.body.zipcode,
-            coord : [req.body.lat, req.body.lon]
-        },
-        owner : req.session.userid
 
-    };
-
-    //Todo: Insert to db when the new_r is ready
+    
     MongoClient.connect(mongourl, function(err, db) {
-      assert.equal(err,null);
-      db.collection('restaurants').insertOne(db, new_r, function(result) {
-          db.close();
-          res.status(200);
-          res.end('restaurant was inserted into MongoDB!');
-      })
+        db.collection('restaurants').count({}, function(err, noOfDocument) {
+            var count = noOfDocument;
+            console.log("Count: " + count+1);
+            var new_r = {
+                restaurant_id: count + 1,      
+                name: req.body.name,
+                borough: req.body.borough,
+                cuisine: req.body.cuisine,
+                photo: new Buffer(photoBuffer).toString('base64'),
+                photo_mimetype: mimetype,
+                address: {
+                    street: req.body.street,
+                    building: req.body.building,
+                    zipcode: req.body.zipcode,
+                    coord: [req.body.lat, req.body.lon]
+                },
+                owner: req.session.userid
+
+            };
+            //Todo: Insert to db when the new_r is ready
+            MongoClient.connect(mongourl, function(err, db) {
+                assert.equal(err, null);
+                db.collection('restaurants').insertOne(new_r, function(err, result) {
+                    assert.equal(err, null);
+                    db.close();
+                    res.status(200);
+                    res.end('restaurant was inserted into MongoDB!');
+                })
+            });
+
+            console.log("new_r = " + JSON.stringify(new_r));
+
+        });
     });
 
-    console.log("new_r = " + new_r);
-    res.end(JSON.stringify(new_r));
+
+
+
+
+
+
+
+    // res.end(JSON.stringify(new_r));
 })
 
 app.get("/logout", function(req, res, next) {
     req.session = null;
     // res.clearCookie("userid");
     res.end("You have logout your account!!!")
+});
+
+app.get("/test", function(req, res, next) {
+    MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        db.collection('restaurants').remove(function(err,result){
+            db.close();
+            res.end("removed");
+        });
+    });
 });
 
 app.listen(process.env.PORT || 8099);
