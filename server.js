@@ -9,16 +9,13 @@ var ObjectId = require('mongodb').ObjectID;
 var mongourl = 'mongodb://hoiki:password@ds141514.mlab.com:41514/hoikitest';
 
 //Alternative way to use cookies:
-// var session = require('cookie-session');
-// app.use(session({
-//     name: 'session',
-//     keys: ['key1', 'key2']
-// }));
+var session = require('cookie-session');
+app.use(session({
+    name: 'session',
+    keys: ['key1', 'key2']
+}));
 // req.session.userid
 // req.session = null;
-
-var cookieParser = require('cookie-parser');
-app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 
@@ -29,9 +26,8 @@ app.get("/", function(req, res) {
         msg = "";
     //if cookie has userid -> logined -> redirect to /read
     //else not login -> show login page
-    //typeof query !== 'undefined' && query !== null
 
-    if (req.cookies.userid) {
+    if (req.session.userid) {
         res.redirect('/read');
     } else {
         res.render("login", { message: msg });
@@ -63,14 +59,10 @@ app.post("/login_auth", function(req, res) {
                         if (result.password == password) {
                             console.log("Login sucess");
                             //Retrieve the cookie
-                            if (req.cookies.userid) {
-                                console.log(req.cookies);
-                                // res.write("Welcome back");
-                            } else {
+                            if (!req.session.userid) {
+                                console.log(req.session.userid);
                                 //set cookie:
-                                //res.cookie("key", value);
-                                res.cookie('userid', userid, { maxAge: 1.5 * 60 * 1000 });
-                                // res.write("Welcome");
+                                req.session.userid = userid
                             }
                             //Error in this line:
                             res.redirect('/read');
@@ -101,7 +93,7 @@ app.get("/register", function(req, res) {
         err = "";
     //if cookie has userid -> logined -> redirect to /read
     //else not login -> show register page
-    if (req.cookies.userid) {
+    if (req.session.userid) {
         res.redirect('/read');
     } else {
         res.render("register", { errorMessage: err });
@@ -167,9 +159,8 @@ app.get("/read", function(req, res) {
 });
 
 app.get("/logout", function(req, res, next) {
-    //Cannot destroy the cookie...
-    // req.cookies = null;
-    res.clearCookie("userid");
+    req.session = null;
+    // res.clearCookie("userid");
     res.end("You have logout your account!!!")
 });
 
