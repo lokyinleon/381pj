@@ -9,6 +9,7 @@ var ObjectId = require('mongodb').ObjectID;
 var mongourl = 'mongodb://hoiki:password@ds141514.mlab.com:41514/hoikitest';
 var fileUpload = require('express-fileupload');
 
+
 //Alternative way to use cookies:
 var session = require('cookie-session');
 app.use(session({
@@ -63,7 +64,7 @@ app.post("/login_auth", function(req, res) {
                             console.log("Login sucess");
                             //Retrieve the cookie
                             if (!req.session.userid) {
-                                console.log(req.session.userid);
+                                console.log("req.session.userid: " + req.session.userid);
                                 //set cookie:
                                 req.session.userid = userid
                             }
@@ -157,8 +158,46 @@ app.post("/reg_auth", function(req, res) {
 
 app.get("/read", function(req, res) {
     res.status(200);
-    res.end("You have login your account!!!");
-    //res.render("read", {});
+    console.log("query string: " + JSON.stringify(req.query));
+    MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        //
+        var restaurants = [];
+        cursor = db.collection('restaurants').find(req.query)
+
+        cursor.each(function(err, doc) {
+            assert.equal(err, null);
+            if (doc != null) {
+                restaurants.push(doc);
+                // console.log(doc);
+                // console.log(restaurants);
+            } else {
+                // console.log(restaurants)
+                res.render("show_all", { userid: req.session.userid, c: restaurants, criteria: JSON.stringify(req.query) });
+            }
+        });
+
+        //
+
+    });
+
+});
+
+app.get("/display", function(req, res) {
+    res.status(200);
+    // res.write(JSON.stringify(req.query));
+
+    MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        console.log('Connected to MongoDB\n');
+        db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
+            console.log(doc);
+            res.render("display_one",{r: doc});
+
+        });
+
+    });
+    // res.end("You are in display page");
 });
 
 app.get("/new", function(req, res) {
@@ -201,13 +240,13 @@ app.post("/create-logic", function(req, res) {
     //Todo: auto increment on restaurant_id
     //handle if dont input corresponding data
 
-    
+
     MongoClient.connect(mongourl, function(err, db) {
         db.collection('restaurants').count({}, function(err, noOfDocument) {
             var count = noOfDocument;
-            console.log("Count: " + count+1);
+            console.log("Count: " + count + 1);
             var new_r = {
-                restaurant_id: count + 1,      
+                restaurant_id: count + 1,
                 name: req.body.name,
                 borough: req.body.borough,
                 cuisine: req.body.cuisine,
@@ -257,7 +296,7 @@ app.get("/logout", function(req, res, next) {
 app.get("/test", function(req, res, next) {
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
-        db.collection('restaurants').remove(function(err,result){
+        db.collection('restaurants').remove(function(err, result) {
             db.close();
             res.end("removed");
         });

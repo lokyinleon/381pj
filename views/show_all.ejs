@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>Restaurant</title>
+	</head>
+	<body>
+		<h1>Restaurants</h1>
+		User: <%= userid %> <br>
+
+		Showing <%= c.length %> documents
+		(criteria:<%= criteria %>) <br><br>
+		<a href='/new'><button>Create New Restaurant</button></a>
+
+		<table>
+        	<thead>
+          		<tr>
+            		<th>Name</th>
+          		</tr>
+        	</thead>
+        	<tbody>
+          		<!-- for loop to gen tr -->
+          		
+				<% for (var i in c) { %>
+  					<tr>
+  						<td>
+  							<a href='/display?_id=<%= c[i]._id %>'><%= c[i].name %></a>
+  						</td>
+  					<tr>
+				<% } %>
+
+        	</tbody>
+      	</table>
+
+	</body>
+</html>
+
+<!-- c = [
+	{name:"123",_id:"123"},
+	{name:"123",_id:"123"},
+	{name:"123",_id:"123"}
+]
+
+<% for (var i in c) { %>
+  					<tr><td><a href='/display?_id=123'>123</a><td><tr>
+<% } %>
+ -->
