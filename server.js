@@ -158,6 +158,14 @@ app.post("/reg_auth", function(req, res) {
 
 app.get("/read", function(req, res) {
     res.status(200);
+
+    var msg = "Please login!";
+
+    if (!req.session.userid) {
+        res.render("login", { message: msg });
+    }
+
+
     console.log("query string: " + JSON.stringify(req.query));
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
@@ -173,7 +181,7 @@ app.get("/read", function(req, res) {
                 // console.log(restaurants);
             } else {
                 // console.log(restaurants)
-                res.render("show_all", { userid: req.session.userid, c: restaurants, criteria: JSON.stringify(req.query) });
+                res.render("show_all", { userid: req.session.userid, r: restaurants, criteria: JSON.stringify(req.query) });
             }
         });
 
@@ -187,12 +195,18 @@ app.get("/display", function(req, res) {
     res.status(200);
     // res.write(JSON.stringify(req.query));
 
+    var msg = "Please login!";
+
+    if (!req.session.userid) {
+        res.render("login", { message: msg });
+    }
+
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
         console.log('Connected to MongoDB\n');
         db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
-            console.log(doc);
-            res.render("display_one",{r: doc});
+            // console.log(doc);
+            res.render("display_one", { r: doc });
 
         });
 
@@ -207,7 +221,7 @@ app.get("/new", function(req, res) {
     if (req.session.userid) {
         res.render("create");
     } else {
-        res.render('login', { message: "" });
+        res.render('login', { message: "Please login!" });
     }
 
 });
@@ -272,7 +286,7 @@ app.post("/create-logic", function(req, res) {
                 })
             });
 
-            console.log("new_r = " + JSON.stringify(new_r));
+            // console.log("new_r = " + JSON.stringify(new_r));
 
         });
     });
@@ -290,7 +304,8 @@ app.post("/create-logic", function(req, res) {
 app.get("/logout", function(req, res, next) {
     req.session = null;
     // res.clearCookie("userid");
-    res.end("You have logout your account!!!")
+    res.render('login',{ message: "You have logout your account!!!" });
+    // res.end("You have logout your account!!!")
 });
 
 app.get("/test", function(req, res, next) {

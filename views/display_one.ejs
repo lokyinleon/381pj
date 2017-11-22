@@ -8,13 +8,42 @@
 
   <body>
     <h1><%= r.name%></h1>
+    <img src="data:'+r.photo_mimetype+';base64, '+r.photo+'">
+    Borough: Shinjuku
+    Cuisine: cafe
+    Street: 160-0021
+    Building:
+    Zipcode:
+    GPS: [139.701629,35.693505]
+    Rating:
+      1.7 (rso)
+      2.8 (demo)
+    Created by: rso
+
+    Google Map
+<!-- 
+    var new_r = {
+      restaurant_id: count + 1,
+      name: req.body.name,
+      borough: req.body.borough,
+      cuisine: req.body.cuisine,
+      photo: new Buffer(photoBuffer).toString('base64'),
+      photo_mimetype: mimetype,
+      address: {
+          street: req.body.street,
+          building: req.body.building,
+          zipcode: req.body.zipcode,
+          coord: [req.body.lat, req.body.lon]
+      },
+      owner: req.session.userid
+    };
+ -->
 
 
-    
-    <button>Rate</button>
-    <button>Edit</button>
-    <button>Delete</button>
-    <button>Go Back</button>
+    <button> <a href="#"> Rate    </a> </button>
+    <button> <a href="#"> Edit    </a> </button>
+    <button> <a href="#"> Delete  </a> </button>
+    <button> <a href="#"> Go Back </a> </button>
   </body>
 
 </html>
