@@ -1,49 +1,58 @@
 <html>
 
   <head>
-    <title>
-      <%= r.name%>
-    </title>
+    <title><%= r.name%></title>
+    <style> 
+      img {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+    </script>
   </head>
 
   <body>
     <h1><%= r.name%></h1>
-    <img src="data:'+r.photo_mimetype+';base64, '+r.photo+'">
-    Borough: Shinjuku
-    Cuisine: cafe
-    Street: 160-0021
-    Building:
-    Zipcode:
-    GPS: [139.701629,35.693505]
+<!--     have photo -> enter if block -> show photo
+    don't have photo ->not enter if block -> not show photo -->
+    <% if (r.photo){ %>
+      <img src="data:<%= r.photo_mimetype %>;base64, <%= r.photo %>">
+    <% } %> 
+
+    Borough: <%= r.borough %> <br><br>
+    Cuisine: <%= r.cuisine %> <br><br>
+    Street: <%= r.address.street %> <br><br>
+    Building: <%= r.address.building %> <br><br>
+    Zipcode: <%= r.address.zipcode%> <br><br>
+    GPS: [<%= r.address.coord[0] %>, <%= r.address.coord[1] %>] <br><br>
     Rating:
-      1.7 (rso)
-      2.8 (demo)
-    Created by: rso
 
-    Google Map
-<!-- 
-    var new_r = {
-      restaurant_id: count + 1,
-      name: req.body.name,
-      borough: req.body.borough,
-      cuisine: req.body.cuisine,
-      photo: new Buffer(photoBuffer).toString('base64'),
-      photo_mimetype: mimetype,
-      address: {
-          street: req.body.street,
-          building: req.body.building,
-          zipcode: req.body.zipcode,
-          coord: [req.body.lat, req.body.lon]
-      },
-      owner: req.session.userid
-    };
- -->
+      <% if (r.grade) { %>
+        <ol>
+        <% for (var i in r.grade){ %>
+          <li> <%= r.grade[i].userid %> (<%= r.grade[i].score %>)<li>
+        <% } %> 
+        </ol>
+      <% } %>
+    <br><br>
+    Created by: <%= r.owner %><br><br>
+
+    <% if (r.address.coord[0] && r.address.coord[1]){ %>
+      <a href='/gmap?lat=<%= r.address.coord[0] %>&lon=<%= r.address.coord[1] %>&title=<%= r.name%>'>Google Map</a> <br><br>
+      <!-- <a href="/gmap?lat=35.693505&amp;lon=139.701629&amp;title=Doutor">Google Map</a> -->
+    <% } %>
 
 
+<!--     Click button -> go to different page
+    Think about the params  -->
     <button> <a href="#"> Rate    </a> </button>
     <button> <a href="#"> Edit    </a> </button>
     <button> <a href="#"> Delete  </a> </button>
-    <button> <a href="#"> Go Back </a> </button>
+    <button onclick="goBack()">Go Back</button>
   </body>
 
 </html>

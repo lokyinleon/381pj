@@ -200,6 +200,7 @@ app.get("/display", function(req, res) {
     if (!req.session.userid) {
         res.render("login", { message: msg });
     }
+    //handle no req.query._id
 
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
@@ -227,14 +228,7 @@ app.get("/new", function(req, res) {
 });
 
 
-function getNextID() {
-    MongoClient.connect(mongourl, function(err, db) {
-        db.collection('restaurants').count({}, function(err, count) {
-            return count + 1;
-        });
-    });
 
-}
 
 
 
@@ -286,25 +280,19 @@ app.post("/create-logic", function(req, res) {
                 })
             });
 
-            // console.log("new_r = " + JSON.stringify(new_r));
-
         });
     });
-
-
-
-
-
-
-
-
-    // res.end(JSON.stringify(new_r));
+    
 })
+
+app.get('/gmap', function(req, res) {
+    res.render('gmap.ejs', { lat: req.query.lat, lon: req.query.lon, title: req.query.title });
+});
 
 app.get("/logout", function(req, res, next) {
     req.session = null;
     // res.clearCookie("userid");
-    res.render('login',{ message: "You have logout your account!!!" });
+    res.render('login', { message: "You have logout your account!!!" });
     // res.end("You have logout your account!!!")
 });
 
@@ -317,5 +305,14 @@ app.get("/test", function(req, res, next) {
         });
     });
 });
+
+function getNextID() {
+    MongoClient.connect(mongourl, function(err, db) {
+        db.collection('restaurants').count({}, function(err, count) {
+            return count + 1;
+        });
+    });
+
+}
 
 app.listen(process.env.PORT || 8099);
