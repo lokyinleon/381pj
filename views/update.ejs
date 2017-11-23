@@ -18,34 +18,34 @@
   <body>
   <form action="/update" method="post" enctype="multipart/form-data"  style="width:100%">
   <p>
-
+<label>Name</label>
   <input required="" name="name" type="text" value="<%= r.name %>">
-  <label>Name</label></p>
-  <p>
+</p>
+  <p><label>Borough</label>
   <input name="borough" type="text" value="<%= r.borough %>">
-  <label>Borough</label></p>
-  <p>
+  </p>
+  <p><label>Cuisine</label>
   <input name="cuisine" type="text" value="<%= r.cuisine %>">
-  <label>Cuisine</label></p>
-  <p>
+  </p>
+  <p><label>Street</label>
   <input name="street" type="text" value="<%= r.address.street %>">
-  <label>Street</label></p>
-  <p>
+  </p>
+  <p><label>Building</label>
   <input name="building" type="text" value="<%= r.address.building %>">
-  <label>Building</label></p>
   <p>
+  <p><label>Zipcode</label>
   <input name="zipcode"  type="text" value="<%= r.address.zipcode%>">
-  <label>Zipcode</label></p>
+  </p>
   <p>
-  </p><p>
+  </p><p><label>GPS Coordinates (lon.)</label>
   <input name="lon"  type="text" value="<%= r.address.coord[0] %>">
-  <label>GPS Coordinates (lon.)</label></p>
-  <p>
+  </p>
+  <p><label>GPS Coordinates (lat.)</label>
   <input name="lat" type="text" value="<%= r.address.coord[1] %>">
-  <label>GPS Coordinates (lat.)</label></p>
-  <p>
+  </p>
+  <p><label>Photo</label>
   <input name="photo" type="file">
-  <label>Photo</label></p>
+  </p>
   <p>
   <button>Change</button></p>
 </form>
