@@ -232,7 +232,7 @@ app.get("/rate", function(req, res) {
     //have login -> create page
     //not login -> show login page
     if (req.session.userid) {
-        res.render("rate", { _id: req.query._id, userid: req.session.userid });
+        res.render("rate", {_id: req.query._id, userid: req.session.userid});
     } else {
         res.render('login', { message: "Please login!" });
     }
@@ -247,22 +247,32 @@ app.post("/rate-logic", function(req, res) {
     //create a json object to insert in mongoDB
     //handle if dont input corresponding data
 
-    //Todo: Insert to db when the new_r is ready
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
-        db.collection('restaurants').updateOne({ "_id": ObjectId(req.body._id) }, { $push: { "grades": { "user": req.body.userid, "score": req.body.score } } }, function(err, result) {
+        db.collection('restaurants').findOne({"_id": ObjectId(req.body._id)}, function(err, resultCount) {
             assert.equal(err, null);
-            db.close();
-            res.status(200);
-            res.end('Restaurant rating has been written to MongoDB.');
-        })
+            if(resultCount.grades){
+                for(var i in resultCount.grades){
+                    if(resultCount.grades[i].user == req.session.userid){
+                        res.end('You have rated this restaurant before.');
+                        db.close();
+                    }
+                }
+
+                try{
+                    db.collection('restaurants').updateOne({"_id": ObjectId(req.body._id)},{$push:{"grades":{"user": req.body.userid,"score": req.body.score}}}, function(err, result) {
+                        res.end('Restaurant rating has been written to MongoDB.');
+                    });
+                }catch(e){
+
+                }
+
+            }   
+        });
     });
 
-})
-
-
-
-
+    
+});
 
 app.post("/create-logic", function(req, res) {
     res.status(200);
