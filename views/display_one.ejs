@@ -31,10 +31,10 @@
     GPS: [<%= r.address.coord[0] %>, <%= r.address.coord[1] %>] <br><br>
     Rating:
 
-      <% if (r.grade) { %>
+      <% if (r.grades) { %>
         <ol>
-        <% for (var i in r.grade){ %>
-          <li> <%= r.grade[i].userid %> (<%= r.grade[i].score %>)<li>
+        <% for (var i in r.grades){ %>
+          <li> <%= r.grades[i].user %> (<%= r.grades[i].score %>)<li>
         <% } %> 
         </ol>
       <% } %>
@@ -49,8 +49,8 @@
 
 <!--     Click button -> go to different page
     Think about the params  -->
-    <button> <a href="#"> Rate    </a> </button>
-    <button> <a href='/edit?owner=<%= r.owner %>&_id=<%=r._id%>'> Edit    </a> </button>
+    <button onclick="window.location='/rate?_id=<%=r._id%>'"> Rate    </button>
+    <button onclick="window.location='/edit?owner=<%= r.owner %>&_id=<%=r._id%>'"> Edit    </button>
     <button> <a href="#"> Delete  </a> </button>
     <button onclick="goBack()">Go Back</button>
   </body>

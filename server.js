@@ -207,7 +207,7 @@ app.get("/display", function(req, res) {
         console.log('Connected to MongoDB\n');
         db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
             // console.log(doc);
-            res.render("display_one", { r: doc });
+            res.render("display_one", { r: doc, _id: req.query._id});
 
         });
 
@@ -227,6 +227,38 @@ app.get("/new", function(req, res) {
 
 });
 
+app.get("/rate", function(req, res) {
+    res.status(200);
+    //have login -> create page
+    //not login -> show login page
+    if (req.session.userid) {
+        res.render("rate", {_id: req.query._id, userid: req.session.userid});
+    } else {
+        res.render('login', { message: "Please login!" });
+    }
+
+});
+
+app.post("/rate-logic", function(req, res) {
+    res.status(200);
+    //input text field in form
+    console.log(req.body);
+
+    //create a json object to insert in mongoDB
+    //handle if dont input corresponding data
+
+    //Todo: Insert to db when the new_r is ready
+    MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        db.collection('restaurants').updateOne({"_id": ObjectId(req.body._id)},{$push:{"grades":{"user": req.body.userid,"score": req.body.score}}}, function(err, result) {
+            assert.equal(err, null);
+            db.close();
+            res.status(200);
+            res.end('Restaurant rating has been written to MongoDB.');
+        })
+    });
+    
+})
 
 
 
@@ -258,15 +290,16 @@ app.post("/create-logic", function(req, res) {
                 name: req.body.name,
                 borough: req.body.borough,
                 cuisine: req.body.cuisine,
-                photo: new Buffer(photoBuffer).toString('base64'),
-                photo_mimetype: mimetype,
                 address: {
                     street: req.body.street,
                     building: req.body.building,
                     zipcode: req.body.zipcode,
                     coord: [req.body.lat, req.body.lon]
                 },
-                owner: req.session.userid
+                grades:[],
+                owner: req.session.userid,
+                photo: new Buffer(photoBuffer).toString('base64'),
+                photo_mimetype: mimetype,
 
             };
             //Todo: Insert to db when the new_r is ready
