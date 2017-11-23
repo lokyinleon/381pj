@@ -5,14 +5,14 @@
   "version": "1.0.0",
   "dependencies": {
     "assert": "^1.4.1",
+    "cookie-session": "^2.0.0-beta.3",
+    "ejs": "*",
     "express": "^4.16.2",
+    "express-fileupload": "^0.3.0",
     "formidable": "^1.1.1",
     "http": "0.0.0",
     "mongodb": "^2.2.33",
-    "url": "^0.11.0",
-    "ejs": "*",
-    "cookie-session": "latest",
-    "express-fileupload": "latest"
+    "url": "^0.11.0"
   },
   "engine": "node >= 0.10.0",
   "scripts": {
