@@ -1,0 +1,64 @@
+<html>
+
+  <head>
+    <title><%= r.name%></title>
+    <style> 
+      img {
+        width: 100%;
+        height: auto;
+      }
+    </style>
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+  </head>
+
+  <body>
+  <form action="/update" method="post" enctype="multipart/form-data" class="w3-container" style="width:100%">
+  <p>
+  <input type="hidden" name="_id" value="5a1519a319bdcd003847704f">
+  <input type="hidden" name="userid" value="demo">
+
+  <input required="" name="name" class="w3-input" type="text" value="create">
+  <label class="w3-label w3-validate">Name</label></p>
+  <p>
+  <input name="borough" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">Borough</label></p>
+  <p>
+  <input name="cuisine" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">Cuisine</label></p>
+  <p>
+  <input name="street" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">Street</label></p>
+  <p>
+  <input name="building" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">Building</label></p>
+  <p>
+  <input name="zipcode" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">Zipcode</label></p>
+  <p>
+  </p><p>
+  <input name="lon" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">GPS Coordinates (lon.)</label></p>
+  <p>
+  <input name="lat" class="w3-input" type="text" value="">
+  <label class="w3-label w3-validate">GPS Coordinates (lat.)</label></p>
+  <p>
+  <input name="sampleFile" class="w3-input" type="file">
+  <label class="w3-label w3-validate">Photo</label></p>
+  <p>
+  <button class="w3-btn w3-section w3-teal w3-ripple"> Change </button></p>
+</form>
+
+
+<!--     Click button -> go to different page
+    Think about the params  -->
+    <button> <a href="#"> Rate    </a> </button>
+    <button> <a href='/edit'> Edit    </a> </button>
+    <button> <a href="#"> Delete  </a> </button>
+    <button onclick="goBack()">Go Back</button>
+  </body>
+
+</html>

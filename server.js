@@ -160,9 +160,9 @@ app.get("/read", function(req, res) {
     res.status(200);
 
     var msg = "Please login!";
-
     if (!req.session.userid) {
         res.render("login", { message: msg });
+
     }
 
 
@@ -304,6 +304,39 @@ app.get("/test", function(req, res, next) {
             res.end("removed");
         });
     });
+});
+
+app.get("/edit",function(req,res,next){
+   res.status(200);
+
+    var msg = "Please login!";
+    if (!req.session.userid) {
+        res.render("login", { message: msg });
+      
+
+    }
+    //req.query.owner   
+      //if req.session.userid==owner  redirect to update.ejs
+      // else res.end("");
+   
+    if(req.session.userid==req.query.owner){
+      console.log("Enter");
+       MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        console.log('Connected to MongoDB\n');
+        db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
+            // console.log(doc);
+            console.log("Request ID*****:"+req.query._id);
+            res.render("update", { r: doc });
+
+        });
+
+    });
+    }else{
+        console.log("No Authorized");
+    }
+
+    
 });
 
 function getNextID() {
