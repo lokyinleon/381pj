@@ -321,7 +321,7 @@ app.post("/create-logic", function(req, res) {
                     res.status(200);
                     //res.end('restaurant was inserted into MongoDB!');
                         db.collection('restaurants').findOne({name:new_r.name}, function(err, doc) {
-                        // console.log(doc);
+                       //console.log(doc);
                         db.close();
                         res.render("display_one", { r: doc, _id: req.query._id });
                         
