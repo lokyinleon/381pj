@@ -207,7 +207,7 @@ app.get("/display", function(req, res) {
         console.log('Connected to MongoDB\n');
         db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
             // console.log(doc);
-            res.render("display_one", { r: doc, _id: req.query._id});
+            res.render("display_one", { r: doc, _id: req.query._id });
 
         });
 
@@ -232,7 +232,7 @@ app.get("/rate", function(req, res) {
     //have login -> create page
     //not login -> show login page
     if (req.session.userid) {
-        res.render("rate", {_id: req.query._id, userid: req.session.userid});
+        res.render("rate", { _id: req.query._id, userid: req.session.userid });
     } else {
         res.render('login', { message: "Please login!" });
     }
@@ -250,14 +250,14 @@ app.post("/rate-logic", function(req, res) {
     //Todo: Insert to db when the new_r is ready
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
-        db.collection('restaurants').updateOne({"_id": ObjectId(req.body._id)},{$push:{"grades":{"user": req.body.userid,"score": req.body.score}}}, function(err, result) {
+        db.collection('restaurants').updateOne({ "_id": ObjectId(req.body._id) }, { $push: { "grades": { "user": req.body.userid, "score": req.body.score } } }, function(err, result) {
             assert.equal(err, null);
             db.close();
             res.status(200);
             res.end('Restaurant rating has been written to MongoDB.');
         })
     });
-    
+
 })
 
 
@@ -296,7 +296,7 @@ app.post("/create-logic", function(req, res) {
                     zipcode: req.body.zipcode,
                     coord: [req.body.lat, req.body.lon]
                 },
-                grades:[],
+                grades: [],
                 owner: req.session.userid,
                 photo: new Buffer(photoBuffer).toString('base64'),
                 photo_mimetype: mimetype,
@@ -315,21 +315,21 @@ app.post("/create-logic", function(req, res) {
 
         });
     });
-    
+
 })
 
 app.get('/gmap', function(req, res) {
     res.render('gmap.ejs', { lat: req.query.lat, lon: req.query.lon, title: req.query.title });
 });
 
-app.get("/logout", function(req, res, next) {
+app.get("/logout", function(req, res) {
     req.session = null;
     // res.clearCookie("userid");
     res.render('login', { message: "You have logout your account!!!" });
     // res.end("You have logout your account!!!")
 });
 
-app.get("/test", function(req, res, next) {
+app.get("/test", function(req, res) {
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
         db.collection('restaurants').remove(function(err, result) {
@@ -339,92 +339,106 @@ app.get("/test", function(req, res, next) {
     });
 });
 
-app.get("/edit",function(req,res,next){
-   res.status(200);
+app.get("/edit", function(req, res) {
+    res.status(200);
 
     var msg = "Please login!";
     if (!req.session.userid) {
         res.render("login", { message: msg });
-      
+
 
     }
     //req.query.owner   
-      //if req.session.userid==owner  redirect to update.ejs
-      // else res.end("");
-   
-    if(req.session.userid==req.query.owner){
-      console.log("Enter");
-       MongoClient.connect(mongourl, function(err, db) {
-        assert.equal(err, null);
-        console.log('Connected to MongoDB\n');
-        db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
-            // console.log(doc);
-            console.log("Request ID*****:"+req.query._id);
-            res.render("update", { r: doc });
+    //if req.session.userid==owner  redirect to update.ejs
+    // else res.end("");
+
+    if (req.session.userid == req.query.owner) {
+        console.log("Enter");
+        MongoClient.connect(mongourl, function(err, db) {
+            assert.equal(err, null);
+            console.log('Connected to MongoDB\n');
+            db.collection('restaurants').findOne({ _id: ObjectId(req.query._id) }, function(err, doc) {
+                // console.log(doc);
+                console.log("Request ID*****:" + req.query._id);
+                res.render("update", { r: doc });
+
+            });
 
         });
-
-    });
-    }else{
+    } else {
         console.log("No Authorized");
+        res.end("Error! You are not authorized to edit!!! ");
     }
 
-    
+
 });
 
 
-app.post('/update-logic',function(req,res,next){
-    console.log("borough:"+req.body.borough);
-    console.log("cuisine:"+req.body.cuisine);
-    console.log("street:"+req.body.street);
-    var address={
-        coord:[]
+app.post("/update-logic", function(req, res) {
+    var photoBuffer = "";
+    var mimetype = "";
+    if (req.files.photo) {
+        photoBuffer = req.files.photo.data;
+        mimetype = req.files.photo.mimetype;
+        console.log("mimetype:"+mimetype);
+
+    }
+
+    res.status(200);
+    console.log("borough:" + req.body.borough);
+    console.log("cuisine:" + req.body.cuisine);
+    console.log("street:" + req.body.street);
+    var address = {
+        coord: []
     };
+    
     var criteria = {};
-    for (key in req.body){
-        if (req.body[key] != ""){
-            if(key=="street"){
-                address.street=req.body[key];
+    criteria.photo=new Buffer(photoBuffer).toString('base64');
+    criteria.photo_mimetype=mimetype;
+    for (key in req.body) {
+        if (req.body[key] != "" && key != "_id") {
+            if (key == "street") {
+                address.street = req.body[key];
             }
-            if(key=="building"){
-                address.building=req.body[key];
+            if (key == "building") {
+                address.building = req.body[key];
             }
-            if(key=="zipcode"){
-                address.zipcode=req.body[key];   
+            if (key == "zipcode") {
+                address.zipcode = req.body[key];
             }
-            if(key=="lat"){
-                address.coord[0] = req.body[key]; 
+            if (key == "lat") {
+                address.coord[0] = req.body[key];
             }
-            if(key=="lon"){
-                address.coord[1]=req.body[key]; 
+            if (key == "lon") {
+                address.coord[1] = req.body[key];
             }
+            
 
             criteria[key] = req.body[key];
         }
 
     }
 
-    criteria[address] = address;
- res.redirect('/display');
+
+    // photo: new Buffer(photoBuffer).toString('base64'),
+            
+
+    // res.redirect('/display?_id=' + req.body._id);
 
     console.log("/update-logic: " + JSON.stringify(criteria));
 
-    MongoClient.connect(mongourl,function(err,db){
-        assert.equal(err,null);
-        db.collection('restaurants').updateOne({ _id: ObjectId(req.query._id)},{$set: criteria},function(err,res){
-            assert.equal(err,null);
-                console.log("1 document updated");
-                db.close();
-                // res.redirect('/display?_id='+req.body._id);
-               
-            });
+    MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        db.collection('restaurants').updateOne({ _id: ObjectId(req.body._id) }, { $set: criteria }, function(err, result) {
+            assert.equal(err, null);
+            console.log("1 document updated");
+            db.close();
+            res.redirect('/display?_id=' + req.body._id);
         });
-    
+
+    });
+
 });
-
-
-
-
 
 
 function getNextID() {

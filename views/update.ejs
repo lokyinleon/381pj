@@ -16,7 +16,8 @@
   </head>
 
   <body>
-  <form action="/update" method="post" enctype="multipart/form-data"  style="width:100%">
+  <form action="/update-logic" method="post" enctype="multipart/form-data"  style="width:100%">
+  <input type='hidden' name='_id' value="<%= r._id%>">
   <p>
 <label>Name</label>
   <input required="" name="name" type="text" value="<%= r.name %>">
@@ -46,8 +47,7 @@
   <p><label>Photo</label>
   <input name="photo" type="file">
   </p>
-  <p>
-  <button>Change</button></p>
+  <input type='submit' value='Change'>
 </form>
 
 
