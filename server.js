@@ -450,6 +450,22 @@ app.post("/update-logic", function(req, res) {
 
 });
 
+app.get("/remove",function(req,res){
+ console.log("Delete",req.query._id);
+  if (req.session.userid == req.query.owner) {
+    MongoClient.connect(mongourl, function(err, db) {
+     db.collection("restaurants").remove({_id:ObjectId(req.query._id)}, function(err, obj) {
+      if (err) throw err;
+       console.log(obj.result.n + " document(s) deleted");
+       db.close();
+       res.redirect('/read');
+     });
+    } );
+  }else{
+    console.log("No Authorized");
+    res.end("Error No Authorized!!!");
+  }
+});
 
 function getNextID() {
     MongoClient.connect(mongourl, function(err, db) {

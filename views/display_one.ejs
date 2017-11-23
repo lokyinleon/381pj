@@ -51,7 +51,7 @@
     Think about the params  -->
     <button onclick="window.location='/rate?_id=<%=r._id%>'"> Rate    </button>
     <button onclick="window.location='/edit?owner=<%= r.owner %>&_id=<%=r._id%>'"> Edit    </button>
-    <button> <a href="#"> Delete  </a> </button>
+    <button> <a href="/remove?owner=<%= r.owner %>&_id=<%= r._id%>"> Delete  </a> </button>
     <button onclick="goBack()">Go Back</button>
   </body>
 
