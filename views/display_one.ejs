@@ -32,11 +32,11 @@
     Rating:
 
       <% if (r.grades) { %>
-        <ol>
+
         <% for (var i in r.grades){ %>
-          <li> <%= r.grades[i].user %> (<%= r.grades[i].score %>)<li>
+          <br> <%= i+1%>. <%= r.grades[i].user %> (<%= r.grades[i].score %>)
         <% } %> 
-        </ol>
+
       <% } %>
     <br><br>
     Created by: <%= r.owner %><br><br>
