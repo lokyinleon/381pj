@@ -372,6 +372,61 @@ app.get("/edit",function(req,res,next){
     
 });
 
+
+app.post('/update-logic',function(req,res,next){
+    console.log("borough:"+req.body.borough);
+    console.log("cuisine:"+req.body.cuisine);
+    console.log("street:"+req.body.street);
+    var address={
+        coord:[]
+    };
+    var criteria = {};
+    for (key in req.body){
+        if (req.body[key] != ""){
+            if(key=="street"){
+                address.street=req.body[key];
+            }
+            if(key=="building"){
+                address.building=req.body[key];
+            }
+            if(key=="zipcode"){
+                address.zipcode=req.body[key];   
+            }
+            if(key=="lat"){
+                address.coord[0] = req.body[key]; 
+            }
+            if(key=="lon"){
+                address.coord[1]=req.body[key]; 
+            }
+
+            criteria[key] = req.body[key];
+        }
+
+    }
+
+    criteria[address] = address;
+ res.redirect('/display');
+
+    console.log("/update-logic: " + JSON.stringify(criteria));
+
+    MongoClient.connect(mongourl,function(err,db){
+        assert.equal(err,null);
+        db.collection('restaurants').updateOne({ _id: ObjectId(req.query._id)},{$set: criteria},function(err,res){
+            assert.equal(err,null);
+                console.log("1 document updated");
+                db.close();
+                // res.redirect('/display?_id='+req.body._id);
+               
+            });
+        });
+    
+});
+
+
+
+
+
+
 function getNextID() {
     MongoClient.connect(mongourl, function(err, db) {
         db.collection('restaurants').count({}, function(err, count) {
