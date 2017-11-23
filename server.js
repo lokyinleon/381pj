@@ -317,9 +317,19 @@ app.post("/create-logic", function(req, res) {
                 assert.equal(err, null);
                 db.collection('restaurants').insertOne(new_r, function(err, result) {
                     assert.equal(err, null);
-                    db.close();
+                    //db.close();
                     res.status(200);
-                    res.end('restaurant was inserted into MongoDB!');
+                    //res.end('restaurant was inserted into MongoDB!');
+                        db.collection('restaurants').findOne({name:new_r.name}, function(err, doc) {
+                        // console.log(doc);
+                        db.close();
+                        res.render("display_one", { r: doc, _id: req.query._id });
+                        
+                        });
+                
+
+
+
                 })
             });
 
