@@ -484,16 +484,32 @@ app.post('/api/restaurant/create',function(req,res){
     console.log('/api/restaurant/create');
     console.log(req.body);
 
+
+    //Handle photo input
+    var mimetype = "";
+    if (req.files.photo) {
+        photoBuffer = req.files.photo.data;
+        mimetype = req.files.photo.mimetype;
+    }
+
+    res.end(mimetype);
+
+    //Name & owner are mandatory
     //Nothing in name, req.body.name=false , !false -> true, enter if block
     if (!req.body.name || !req.body.owner){
         res.end(JSON.stringify({"status": "failed"}));
+    } else {
+        // create restaurant document
+
     }
-    res.end(JSON.stringify(req.body));
-    //Handle photo input
+ 
 });
 
 app.get('/api/restaurant/read/:key/:value',function(req,res){
-    res.end(req.params.key + " " + req.params.value);
+   
+    var criteria = {};
+    criteria[req.params.key] = req.params.value;
+    res.end(JSON.stringify(criteria));
     //database operation
 });
 
