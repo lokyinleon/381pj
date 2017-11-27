@@ -8,7 +8,9 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var mongourl = 'mongodb://hoiki:password@ds141514.mlab.com:41514/hoikitest';
 var fileUpload = require('express-fileupload');
+var bodyParser = require('body-parser');
 
+app.use(bodyParser.json())
 
 //Alternative way to use cookies:
 var session = require('cookie-session');
@@ -476,6 +478,23 @@ app.get("/remove",function(req,res){
     console.log("No Authorized");
     res.end("Error No Authorized!!!");
   }
+});
+
+app.post('/api/restaurant/create',function(req,res){
+    console.log('/api/restaurant/create');
+    console.log(req.body);
+
+    //Nothing in name, req.body.name=false , !false -> true, enter if block
+    if (!req.body.name || !req.body.owner){
+        res.end(JSON.stringify({"status": "failed"}));
+    }
+    res.end(JSON.stringify(req.body));
+    //Handle photo input
+});
+
+app.get('/api/restaurant/read/:key/:value',function(req,res){
+    res.end(req.params.key + " " + req.params.value);
+    //database operation
 });
 
 function getNextID() {
