@@ -413,7 +413,10 @@ app.post("/update-logic", function(req, res) {
     };
     
     var criteria = {};
-    criteria.photo=new Buffer(photoBuffer).toString('base64');
+    if (photoBuffer){
+        criteria.photo=new Buffer(photoBuffer).toString('base64');
+    }
+ 
     criteria.photo_mimetype=mimetype;
     for (key in req.body) {
         if (req.body[key] != "" && key != "_id") {
@@ -432,8 +435,6 @@ app.post("/update-logic", function(req, res) {
             if (key == "lon") {
                 address.coord[1] = req.body[key];
             }
-            
-
             criteria[key] = req.body[key];
         }
 
@@ -445,7 +446,7 @@ app.post("/update-logic", function(req, res) {
 
     // res.redirect('/display?_id=' + req.body._id);
 
-    console.log("/update-logic: " + JSON.stringify(criteria));
+    // console.log("/update-logic: " + JSON.stringify(criteria));
 
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);

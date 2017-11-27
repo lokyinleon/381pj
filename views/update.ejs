@@ -45,7 +45,10 @@
   <input name="lat" type="text" value="<%= r.address.coord[1] %>">
   </p>
   <p><label>Photo</label>
-  <input name="photo" type="file">
+  <% if (r.photo){ %>
+    <img src="data:<%= r.photo_mimetype %>;base64, <%= r.photo %>">
+  <% } %> 
+  <input name="photo" type="file" value="id1501145846899.png">
   </p>
   <input type='submit' value='Change'>
 </form>
