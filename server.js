@@ -397,51 +397,53 @@ app.get("/edit", function(req, res) {
 
 
 app.post("/update-logic", function(req, res) {
+    res.status(200);
+
     var photoBuffer = "";
     var mimetype = "";
+
     if (req.files.photo) {
         photoBuffer = req.files.photo.data;
+        criteria.photo = new Buffer(photoBuffer).toString('base64');
         mimetype = req.files.photo.mimetype;
+        criteria.photo_mimetype = mimetype;
         console.log("mimetype:" + mimetype);
-
     }
 
-    res.status(200);
-    console.log("borough:" + req.body.borough);
-    console.log("cuisine:" + req.body.cuisine);
-    console.log("street:" + req.body.street);
+    
     var address = {
         coord: []
     };
 
     var criteria = {};
-    if (photoBuffer) {
-        criteria.photo = new Buffer(photoBuffer).toString('base64');
-    }
 
-    criteria.photo_mimetype = mimetype;
+    // if (photoBuffer) {
+    //     criteria.photo = new Buffer(photoBuffer).toString('base64');
+    // }
+
+    
     for (key in req.body) {
         if (req.body[key] != "" && key != "_id") {
             if (key == "street") {
                 address.street = req.body[key];
-            }
-            if (key == "building") {
+            } else if (key == "building") {
                 address.building = req.body[key];
-            }
-            if (key == "zipcode") {
+            } else if (key == "zipcode") {
                 address.zipcode = req.body[key];
-            }
-            if (key == "lat") {
+            } else if (key == "lat") {
                 address.coord[0] = req.body[key];
-            }
-            if (key == "lon") {
+            } else if (key == "lon") {
                 address.coord[1] = req.body[key];
+            } else {
+               criteria[key] = req.body[key]; 
             }
-            criteria[key] = req.body[key];
+            
         }
 
     }
 
+    criteria.address = address    
+    console.log(criteria)
 
     // photo: new Buffer(photoBuffer).toString('base64'),
 
@@ -471,7 +473,8 @@ app.get("/remove", function(req, res) {
                 if (err) throw err;
                 console.log(obj.result.n + " document(s) deleted");
                 db.close();
-                res.redirect('/read');
+                res.end('1 document deleted');
+                // res.redirect('/read');
             });
         });
     } else {
