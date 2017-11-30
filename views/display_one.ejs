@@ -34,7 +34,7 @@
       <% if (r.grades) { %>
 
         <% for (var i in r.grades){ %>
-          <br> <%= i+1%>. <%= r.grades[i].user %> (<%= r.grades[i].score %>)
+          <br> <%= Number(i)+1%>. <%= r.grades[i].user %> (<%= r.grades[i].score %>)
         <% } %> 
 
       <% } %>

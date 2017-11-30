@@ -234,7 +234,7 @@ app.get("/rate", function(req, res) {
     //have login -> create page
     //not login -> show login page
     if (req.session.userid) {
-        res.render("rate", {_id: req.query._id, userid: req.session.userid});
+        res.render("rate", { _id: req.query._id, userid: req.session.userid });
     } else {
         res.render('login', { message: "Please login!" });
     }
@@ -251,29 +251,29 @@ app.post("/rate-logic", function(req, res) {
 
     MongoClient.connect(mongourl, function(err, db) {
         assert.equal(err, null);
-        db.collection('restaurants').findOne({"_id": ObjectId(req.body._id)}, function(err, resultCount) {
+        db.collection('restaurants').findOne({ "_id": ObjectId(req.body._id) }, function(err, resultCount) {
             assert.equal(err, null);
-            if(resultCount.grades){
-                for(var i in resultCount.grades){
-                    if(resultCount.grades[i].user == req.session.userid){
+            if (resultCount.grades) {
+                for (var i in resultCount.grades) {
+                    if (resultCount.grades[i].user == req.session.userid) {
                         res.end('You have rated this restaurant before.');
                         db.close();
                     }
                 }
 
-                try{
-                    db.collection('restaurants').updateOne({"_id": ObjectId(req.body._id)},{$push:{"grades":{"user": req.body.userid,"score": req.body.score}}}, function(err, result) {
+                try {
+                    db.collection('restaurants').updateOne({ "_id": ObjectId(req.body._id) }, { $push: { "grades": { "user": req.body.userid, "score": req.body.score } } }, function(err, result) {
                         res.end('Restaurant rating has been written to MongoDB.');
                     });
-                }catch(e){
+                } catch (e) {
 
                 }
 
-            }   
+            }
         });
     });
 
-    
+
 });
 
 app.post("/create-logic", function(req, res) {
@@ -289,7 +289,7 @@ app.post("/create-logic", function(req, res) {
     }
 
     //create a json object to insert in mongoDB
-    //Todo: auto increment on restaurant_id
+    //done: auto increment on restaurant_id
     //handle if dont input corresponding data
 
 
@@ -322,13 +322,13 @@ app.post("/create-logic", function(req, res) {
                     //db.close();
                     res.status(200);
                     //res.end('restaurant was inserted into MongoDB!');
-                        db.collection('restaurants').findOne({name:new_r.name}, function(err, doc) {
-                       //console.log(doc);
+                    db.collection('restaurants').findOne({ restaurant_id: new_r.restaurant_id }, function(err, doc) {
+                        //console.log(doc);
                         db.close();
                         res.render("display_one", { r: doc, _id: req.query._id });
-                        
-                        });
-                
+
+                    });
+
 
 
 
@@ -402,7 +402,7 @@ app.post("/update-logic", function(req, res) {
     if (req.files.photo) {
         photoBuffer = req.files.photo.data;
         mimetype = req.files.photo.mimetype;
-        console.log("mimetype:"+mimetype);
+        console.log("mimetype:" + mimetype);
 
     }
 
@@ -413,13 +413,13 @@ app.post("/update-logic", function(req, res) {
     var address = {
         coord: []
     };
-    
+
     var criteria = {};
-    if (photoBuffer){
-        criteria.photo=new Buffer(photoBuffer).toString('base64');
+    if (photoBuffer) {
+        criteria.photo = new Buffer(photoBuffer).toString('base64');
     }
- 
-    criteria.photo_mimetype=mimetype;
+
+    criteria.photo_mimetype = mimetype;
     for (key in req.body) {
         if (req.body[key] != "" && key != "_id") {
             if (key == "street") {
@@ -444,7 +444,7 @@ app.post("/update-logic", function(req, res) {
 
 
     // photo: new Buffer(photoBuffer).toString('base64'),
-            
+
 
     // res.redirect('/display?_id=' + req.body._id);
 
@@ -463,54 +463,138 @@ app.post("/update-logic", function(req, res) {
 
 });
 
-app.get("/remove",function(req,res){
- console.log("Delete",req.query._id);
-  if (req.session.userid == req.query.owner) {
-    MongoClient.connect(mongourl, function(err, db) {
-     db.collection("restaurants").remove({_id:ObjectId(req.query._id)}, function(err, obj) {
-      if (err) throw err;
-       console.log(obj.result.n + " document(s) deleted");
-       db.close();
-       res.redirect('/read');
-     });
-    } );
-  }else{
-    console.log("No Authorized");
-    res.end("Error No Authorized!!!");
-  }
+app.get("/remove", function(req, res) {
+    console.log("Delete", req.query._id);
+    if (req.session.userid == req.query.owner) {
+        MongoClient.connect(mongourl, function(err, db) {
+            db.collection("restaurants").remove({ _id: ObjectId(req.query._id) }, function(err, obj) {
+                if (err) throw err;
+                console.log(obj.result.n + " document(s) deleted");
+                db.close();
+                res.redirect('/read');
+            });
+        });
+    } else {
+        console.log("No Authorized");
+        res.end("Error No Authorized!!!");
+    }
 });
 
-app.post('/api/restaurant/create',function(req,res){
+app.post('/api/restaurant/create', function(req, res) {
     console.log('/api/restaurant/create');
     console.log(req.body);
 
 
     //Handle photo input
-    var mimetype = "";
-    if (req.files.photo) {
-        photoBuffer = req.files.photo.data;
-        mimetype = req.files.photo.mimetype;
-    }
+    // var mimetype = "";
+    // if (req.files.photo) {
+    //     photoBuffer = req.files.photo.data;
+    //     mimetype = req.files.photo.mimetype;
+    // }
 
-    res.end(mimetype);
+    // res.end(mimetype);
 
     //Name & owner are mandatory
     //Nothing in name, req.body.name=false , !false -> true, enter if block
-    if (!req.body.name || !req.body.owner){
-        res.end(JSON.stringify({"status": "failed"}));
+    if (!req.body.name || !req.body.owner) {
+        res.end(JSON.stringify({ "status": "failed" }));
     } else {
         // create restaurant document
 
+        // var new_r = {}
+        // for (key in req.body){
+        //     new_r[key] = req.body[key]
+        // }
+
+
+
+
+        MongoClient.connect(mongourl, function(err, db) {
+            assert.equal(err, null);
+
+            db.collection('restaurants').count({}, function(err, noOfDocument) {
+                var count = noOfDocument;
+                console.log("Count: " + count + 1);
+                var new_r = {
+                    restaurant_id: count + 1,
+                    name: req.body.name,
+                    borough: req.body.borough,
+                    cuisine: req.body.cuisine,
+                    address: {
+                        street: req.body.address.street,
+                        building: req.body.address.building,
+                        zipcode: req.body.address.zipcode,
+                        coord: [req.body.address.coord[0], req.body.address.coord[1]]
+                    },
+                    grades: [],
+                    owner: req.body.owner,
+                    photo: req.body.photo,
+                    photo_mimetype: req.body.mimetype,
+                };
+
+
+
+                db.collection('restaurants').insertOne(new_r, function(err, result) {
+                    assert.equal(err, null);
+                    if (err) {
+                        //have error -> insert fail
+                        db.close();
+                        res.end(JSON.stringify({ "status": "failed" }));
+                        // {
+                        //   status: failed
+                        // }
+                    } else {
+                        //no error -> insert ok , need field "_id" 
+                        db.collection('restaurants').findOne({ restaurant_id: new_r.restaurant_id }, function(err, doc) {
+                            //console.log(doc);
+                            db.close();
+                            var response = {
+                                "status": "ok",
+                                "_id": doc._id
+                            }
+                            res.end(JSON.stringify(response));
+                        });
+
+                    }
+                });
+
+            });
+
+        });
     }
- 
+
 });
 
-app.get('/api/restaurant/read/:key/:value',function(req,res){
-   
+app.get('/api/restaurant/read/:key/:value', function(req, res) {
+
     var criteria = {};
     criteria[req.params.key] = req.params.value;
-    res.end(JSON.stringify(criteria));
+    console.log(criteria);
+    
     //database operation
+    MongoClient.connect(mongourl, function(err, db) {
+        assert.equal(err, null);
+        var restaurants = [];
+
+        cursor = db.collection('restaurants').find(criteria)
+
+        cursor.each(function(err, doc) {
+            assert.equal(err, null);
+            if (doc != null) {
+                restaurants.push(doc);
+                // console.log(doc);
+                // console.log(restaurants);
+            } else {
+                // console.log(restaurants)
+                if (restaurants.length>0){
+                    res.end(JSON.stringify(restaurants));
+                } else {
+                    res.end(JSON.stringify({}));
+                }
+                
+            }
+        });
+    });
 });
 
 function getNextID() {
