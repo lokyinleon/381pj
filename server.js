@@ -401,7 +401,8 @@ app.post("/update-logic", function(req, res) {
 
     var photoBuffer = "";
     var mimetype = "";
-
+    var criteria = {};
+    
     if (req.files.photo) {
         photoBuffer = req.files.photo.data;
         criteria.photo = new Buffer(photoBuffer).toString('base64');
@@ -415,7 +416,7 @@ app.post("/update-logic", function(req, res) {
         coord: []
     };
 
-    var criteria = {};
+    
 
     // if (photoBuffer) {
     //     criteria.photo = new Buffer(photoBuffer).toString('base64');
