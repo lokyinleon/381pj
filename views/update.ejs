@@ -38,11 +38,11 @@
   <input name="zipcode"  type="text" value="<%= r.address.zipcode%>">
   </p>
   <p>
-  </p><p><label>GPS Coordinates (lon.)</label>
-  <input name="lon"  type="text" value="<%= r.address.coord[0] %>">
+  </p><p><label>GPS Coordinates (lat.)</label>
+  <input name="lat"  type="text" value="<%= r.address.coord[0] %>">
   </p>
-  <p><label>GPS Coordinates (lat.)</label>
-  <input name="lat" type="text" value="<%= r.address.coord[1] %>">
+  <p><label>GPS Coordinates (lon.)</label>
+  <input name="lon" type="text" value="<%= r.address.coord[1] %>">
   </p>
   <p><label>Photo</label>
   <% if (r.photo){ %>
