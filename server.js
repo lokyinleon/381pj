@@ -407,6 +407,7 @@ app.post("/update-logic", function(req, res) {
         photoBuffer = req.files.photo.data;
         criteria.photo = new Buffer(photoBuffer).toString('base64');
         mimetype = req.files.photo.mimetype;
+        console.log("mimetype: "+ mimetype);
 
         if(!mimetype.includes("image/")){
             criteria.photo == "";
