@@ -19,7 +19,7 @@
     <h1><%= r.name%></h1>
 <!--     have photo -> enter if block -> show photo
     don't have photo ->not enter if block -> not show photo -->
-    <% if (r.photo){ %>
+    <% if (r.photo_mimetype.includes('image')){ %>
       <img src="data:<%= r.photo_mimetype %>;base64, <%= r.photo %>">
     <% } %> 
 
