@@ -48,7 +48,7 @@
   <% if (r.photo){ %>
     <img src="data:<%= r.photo_mimetype %>;base64, <%= r.photo %>">
   <% } %> 
-  <input name="photo" type="file">
+  <input name="photo" type="file" accept="image/*">
   </p>
   <input type='submit' value='Change'>
 </form>
