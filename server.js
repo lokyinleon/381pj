@@ -402,7 +402,13 @@ app.post("/update-logic", function(req, res) {
     var photoBuffer = "";
     var mimetype = "";
     var criteria = {};
-    
+
+    var msg = "Please login!";
+
+    if (!req.session.userid) {
+        res.render("login", { message: msg });
+    }
+
     if (req.files.photo) {
         photoBuffer = req.files.photo.data;
         criteria.photo = new Buffer(photoBuffer).toString('base64');
