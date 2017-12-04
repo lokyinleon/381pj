@@ -407,73 +407,73 @@ app.post("/update-logic", function(req, res) {
 
     if (!req.session.userid) {
         res.render("login", { message: msg });
-        res.end();
-    }
+    }else{
 
-    if (req.files.photo) {
-        photoBuffer = req.files.photo.data;
-        criteria.photo = new Buffer(photoBuffer).toString('base64');
-        mimetype = req.files.photo.mimetype;
+        if (req.files.photo) {
+            photoBuffer = req.files.photo.data;
+            criteria.photo = new Buffer(photoBuffer).toString('base64');
+            mimetype = req.files.photo.mimetype;
 
-        if(mimetype.indexOf("image/") == -1){
-            criteria.photo == "";
-        }
-
-        criteria.photo_mimetype = mimetype;
-    }
-
-    
-    var address = {
-        coord: []
-    };
-
-    
-
-    // if (photoBuffer) {
-    //     criteria.photo = new Buffer(photoBuffer).toString('base64');
-    // }
-
-    
-    for (key in req.body) {
-        if (req.body[key] != "" && key != "_id") {
-            if (key == "street") {
-                address.street = req.body[key];
-            } else if (key == "building") {
-                address.building = req.body[key];
-            } else if (key == "zipcode") {
-                address.zipcode = req.body[key];
-            } else if (key == "lat") {
-                address.coord[0] = req.body[key];
-            } else if (key == "lon") {
-                address.coord[1] = req.body[key];
-            } else {
-               criteria[key] = req.body[key]; 
+            if(mimetype.indexOf("image/") == -1){
+                criteria.photo == "";
             }
-            
+
+            criteria.photo_mimetype = mimetype;
         }
 
-    }
+        
+        var address = {
+            coord: []
+        };
 
-    criteria.address = address    
-    console.log(criteria)
+        
 
-    // photo: new Buffer(photoBuffer).toString('base64'),
+        // if (photoBuffer) {
+        //     criteria.photo = new Buffer(photoBuffer).toString('base64');
+        // }
+
+        
+        for (key in req.body) {
+            if (req.body[key] != "" && key != "_id") {
+                if (key == "street") {
+                    address.street = req.body[key];
+                } else if (key == "building") {
+                    address.building = req.body[key];
+                } else if (key == "zipcode") {
+                    address.zipcode = req.body[key];
+                } else if (key == "lat") {
+                    address.coord[0] = req.body[key];
+                } else if (key == "lon") {
+                    address.coord[1] = req.body[key];
+                } else {
+                   criteria[key] = req.body[key]; 
+                }
+                
+            }
+
+        }
+
+        criteria.address = address    
+        console.log(criteria)
+
+        // photo: new Buffer(photoBuffer).toString('base64'),
 
 
-    // res.redirect('/display?_id=' + req.body._id);
+        // res.redirect('/display?_id=' + req.body._id);
 
-    // console.log("/update-logic: " + JSON.stringify(criteria));
+        // console.log("/update-logic: " + JSON.stringify(criteria));
 
-    MongoClient.connect(mongourl, function(err, db) {
-        assert.equal(err, null);
-        db.collection('restaurants').updateOne({ _id: ObjectId(req.body._id) }, { $set: criteria }, function(err, result) {
+        MongoClient.connect(mongourl, function(err, db) {
             assert.equal(err, null);
-            console.log("1 document updated");
-            db.close();
-            res.redirect('/display?_id=' + req.body._id);
-        });
+            db.collection('restaurants').updateOne({ _id: ObjectId(req.body._id) }, { $set: criteria }, function(err, result) {
+                assert.equal(err, null);
+                console.log("1 document updated");
+                db.close();
+                res.redirect('/display?_id=' + req.body._id);
+            });
 
-    });
+        });
+    }
 
 });
 
