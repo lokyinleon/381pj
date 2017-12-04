@@ -36,7 +36,9 @@ app.get("/", function(req, res) {
     if (req.session.userid) {
         res.redirect('/read');
     } else {
-        res.render("login", { message: msg });
+        if (req.headers['user-agent'].indexOf('curl') == -1){
+            res.render("login", { message: msg });
+        }
     }
 });
 
@@ -581,6 +583,8 @@ app.post('/api/restaurant/create', function(req, res) {
 });
 
 app.get('/api/restaurant/read/:key/:value', function(req, res) {
+    console.log("api/read");
+    
 
     var criteria = {};
     criteria[req.params.key] = req.params.value;
