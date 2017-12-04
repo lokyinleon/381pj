@@ -45,7 +45,7 @@
   <input name="lon" type="text" value="<%= r.address.coord[1] %>">
   </p>
   <p><label>Photo</label>
-  <% if (r.photo){ %>
+  <% if (r.photo_mimetype.includes('image')){ %>
     <img src="data:<%= r.photo_mimetype %>;base64, <%= r.photo %>">
   <% } %> 
   <input name="photo" type="file" accept="image/*">

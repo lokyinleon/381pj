@@ -407,6 +407,7 @@ app.post("/update-logic", function(req, res) {
 
     if (!req.session.userid) {
         res.render("login", { message: msg });
+        res.end();
     }
 
     if (req.files.photo) {
