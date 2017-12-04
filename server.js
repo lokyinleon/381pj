@@ -536,18 +536,18 @@ app.post('/api/restaurant/create', function(req, res) {
                 var new_r = {
                     restaurant_id: count + 1,
                     name: req.body.name,
-                    borough: req.body.borough,
-                    cuisine: req.body.cuisine,
+                    borough: "",
+                    cuisine: "",
                     address: {
-                        street: req.body.address.street,
-                        building: req.body.address.building,
-                        zipcode: req.body.address.zipcode,
-                        coord: [req.body.address.coord[0], req.body.address.coord[1]]
+                        street: "",
+                        building: "",
+                        zipcode: "",
+                        coord: []
                     },
                     grades: [],
                     owner: req.body.owner,
-                    photo: req.body.photo,
-                    photo_mimetype: req.body.mimetype,
+                    photo: "",
+                    photo_mimetype: "",
                 };
 
 
@@ -585,7 +585,7 @@ app.post('/api/restaurant/create', function(req, res) {
 
 app.get('/api/restaurant/read/:key/:value', function(req, res) {
     console.log("api/read");
-    res.setHeader('Content-Type', 'application/json');
+    
 
     var criteria = {};
     criteria[req.params.key] = req.params.value;
