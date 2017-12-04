@@ -500,6 +500,7 @@ app.get("/remove", function(req, res) {
 app.post('/api/restaurant/create', function(req, res) {
     console.log('/api/restaurant/create');
     console.log(req.body);
+    res.setHeader('Content-Type', 'application/json');
 
 
     //Handle photo input
@@ -584,7 +585,7 @@ app.post('/api/restaurant/create', function(req, res) {
 
 app.get('/api/restaurant/read/:key/:value', function(req, res) {
     console.log("api/read");
-    
+    res.setHeader('Content-Type', 'application/json');
 
     var criteria = {};
     criteria[req.params.key] = req.params.value;
